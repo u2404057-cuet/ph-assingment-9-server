@@ -43,16 +43,23 @@ async function run() {
             res.send(result);
         })
 
-        // app.patch("/cars/:id", async (req, res) => {
-        //     const id = req.params.id;
-        //     const updateData = req.body;
-        //     const query = { _id: new ObjectId(id) };
-        //     const updateDoc = {
-        //         $set: updateData,
-        //     };
-        //     const result = await carsCollection.updateOne(query, updateDoc);
-        //     res.send(result);
-        // })
+        app.patch("/cars/:id", async (req, res) => {
+            const id = req.params.id;
+            const updateData = req.body;
+            const query = { _id: new ObjectId(id) };
+            const updateDoc = {
+                $set: updateData,
+            };
+            const result = await carsCollection.updateOne(query, updateDoc);
+            res.send(result);
+        })
+
+        app.delete("/cars/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) };
+            const result = await carsCollection.deleteOne(query);
+            res.send(result);
+        })
 
         const bookingsCollection = db.collection("bookings");
 
@@ -96,6 +103,24 @@ app.delete("/bookings/:id", async (req, res) => {
             const myCars = await cursor.toArray();
             res.send(myCars);
         });
+
+        app.delete("/my-cars/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) };
+            const result = await myCarsCollection.deleteOne(query);
+            res.send(result);
+        })
+
+        app.patch("/my-cars/:id", async (req, res) => {
+            const id = req.params.id;
+            const updateData = req.body;
+            const query = { _id: new ObjectId(id) };
+            const updateDoc = {
+                $set: updateData,
+            };
+            const result = await myCarsCollection.updateOne(query, updateDoc);
+            res.send(result);
+        })
 
         await client.connect();
         // Send a ping to confirm a successful connection

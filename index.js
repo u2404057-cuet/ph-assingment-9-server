@@ -79,6 +79,24 @@ app.delete("/bookings/:id", async (req, res) => {
   res.send(result);
 })
 
+        const myCarsCollection = db.collection("my-cars");
+
+        app.post("/my-cars", async (req, res) => {
+            const carData = req.body;
+            const result = await myCarsCollection.insertOne(carData);
+            res.send(result);
+        });
+
+        app.get("/my-cars", async (req, res) => {
+            let query = {};
+            if (req.query?.email) {
+                query = { userEmail: req.query.email };
+            }
+            const cursor = myCarsCollection.find(query);
+            const myCars = await cursor.toArray();
+            res.send(myCars);
+        });
+
         await client.connect();
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });

@@ -52,7 +52,17 @@ async function run() {
         const bookingsCollection = db.collection("bookings");
 
         app.post("/bookings", async (req, res) => {
-            const result = await bookingsCollection.insertOne(req.body);
+            const booking = req.body;
+            const result = await bookingsCollection.insertOne(booking);
+            if (booking.carId) {
+                const query = { _id: new ObjectId(booking.carId) };
+                const updateDoc = {
+                    $inc: { booking_count: 1 }
+                };
+                await carsCollection.updateOne(query, updateDoc);
+                await myCarsCollection.updateOne(query, updateDoc);
+            }
+            
             res.json(result);
         })
 

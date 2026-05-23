@@ -63,14 +63,21 @@ async function run() {
         })
 
         app.get("/bookings", async (req, res) => {
-            let query = {};
-            if (req.query?.email) {
-                query = { email: req.query.email };
-            }
-            const cursor = bookingsCollection.find(query);
-            const bookings = await cursor.toArray();
-            res.send(bookings);
-        })
+    let query = {};
+    if (req.query?.email) {
+        query = { userEmail: req.query.email };
+    }
+    const cursor = bookingsCollection.find(query);
+    const bookings = await cursor.toArray();
+    res.send(bookings);
+})
+
+app.delete("/bookings/:id", async (req, res) => {
+  const id = req.params.id;
+  const query = { _id: new ObjectId(id) };
+  const result = await bookingsCollection.deleteOne(query);
+  res.send(result);
+})
 
         await client.connect();
         // Send a ping to confirm a successful connection

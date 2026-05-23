@@ -54,7 +54,6 @@ async function run() {
         //     res.send(result);
         // })
 
-        
         const bookingsCollection = db.collection("bookings");
 
         app.post("/bookings", async (req, res) => {

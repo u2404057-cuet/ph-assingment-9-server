@@ -54,6 +54,25 @@ async function run() {
         //     res.send(result);
         // })
 
+        
+        const bookingsCollection = db.collection("bookings");
+
+        app.post("/bookings", async (req, res) => {
+            const bookingData = req.body;
+            const result = await bookingsCollection.insertOne(bookingData);
+            res.send(result);
+        })
+
+        app.get("/bookings", async (req, res) => {
+            let query = {};
+            if (req.query?.email) {
+                query = { email: req.query.email };
+            }
+            const cursor = bookingsCollection.find(query);
+            const bookings = await cursor.toArray();
+            res.send(bookings);
+        })
+
         await client.connect();
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
